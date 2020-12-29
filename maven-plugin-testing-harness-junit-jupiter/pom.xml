@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    
+    <modelVersion>4.0.0</modelVersion>
+    
+    <parent>
+        <groupId>com.github.codeteapot.maven.plugin-testing</groupId>
+        <artifactId>maven-plugin-testing-harness</artifactId>
+        <version>0.1.1</version>
+    </parent>
+    
+    <artifactId>maven-plugin-testing-harness-junit-jupiter</artifactId>
+    <packaging>jar</packaging>
+    
+    <name>Maven Plugin Testing Harness JUnit Jupiter</name>
+    <description>JUnit Jupiter extension of Maven Plugin Testing Harness</description>
+    <url>https://github.com/codeteapot/maven-plugin-testing-harness</url>
+    
+    <dependencies>
+    
+        <dependency>
+            <groupId>com.github.codeteapot.maven.plugin-testing</groupId>
+            <artifactId>maven-plugin-testing-harness-api</artifactId>
+            <version>0.1.1</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.7.0</version>
+            <scope>provided</scope>
+        </dependency>
+        
+    </dependencies>
+    
+    <build>
+        <plugins>
+        
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            
+            <!--
+                Comment for Eclipse users
+                
+                Respect intentionally wrapped lines even automatic formatting.
+                
+                To avoid remove line breaks, check "Never join already wrapped lines" at "Line
+                Wrapping" section of Java > Code Style > Formatter preference page.
+                
+                You can download Google Style Formatter from
+                https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.1.1</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>8.37</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <configLocation>${checkstyle.configLocation}</configLocation>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default-check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <phase>process-classes</phase>
+                        <configuration>
+                            <failsOnError>true</failsOnError>
+                            <failOnViolation>true</failOnViolation>
+                            <violationSeverity>warning</violationSeverity>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+        </plugins>
+        <pluginManagement>
+            <plugins>
+            
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-checkstyle-plugin</artifactId>
+                                        <versionRange>[3.1,)</versionRange>
+                                        <goals>
+                                            <goal>check</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore/>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+                
+            </plugins>
+        </pluginManagement>
+    </build>
+    
+    <reporting>
+        <plugins>
+        
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <windowtitle>${project.name} API</windowtitle>
+                    <doctitle>${project.name} API</doctitle>
+                    <charset>UTF-8</charset>
+                    <links>
+                        <link>https://docs.oracle.com/javase/8/docs/api/</link>
+                        <link>https://junit.org/junit5/docs/5.7.0/api/</link>
+                    </links>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>javadoc</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            
+        </plugins>
+    </reporting>
+    
+    <properties>
+        <checkstyle.configLocation>https://raw.githubusercontent.com/checkstyle/checkstyle/master/src/main/resources/google_checks.xml</checkstyle.configLocation>
+    </properties>
+    
+    <profiles>
+        <profile>
+        
+            <id>gh-pages-deployer</id>
+            
+            <distributionManagement>
+                <site>
+                    <id>github</id>
+                    <url>scm:git:https://github.com/codeteapot/maven-plugin-testing-harness/maven-plugin-testing-harness-junit-jupiter</url>
+                </site>
+            </distributionManagement>
+            
+        </profile>
+    </profiles>
+    
+</project>

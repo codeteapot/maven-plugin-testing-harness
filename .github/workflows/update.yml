@@ -1,0 +1,41 @@
+name: Update
+
+on:
+
+  push:
+    branches:
+      - main
+      
+jobs:
+
+  deploy-site:
+    name: Deploy site
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Check out repository
+        uses: actions/checkout@v2
+        
+      - name: Maven repository cache
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
+          
+      - name: Set up Java and Maven
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
+          server-id: github.codeteapot
+          
+      - name: Deploy site to GitHub Pages
+        shell: bash
+        run: |
+          git config --global user.name codeteapot
+          git config --global user.email codeteapot@gmail.com
+          
+          mvn -B -DskipTests install
+          mvn -B -Pgh-pages-deployer site-deploy
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
