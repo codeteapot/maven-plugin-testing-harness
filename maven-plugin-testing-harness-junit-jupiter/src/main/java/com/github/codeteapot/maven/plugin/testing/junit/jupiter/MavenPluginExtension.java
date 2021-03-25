@@ -16,15 +16,20 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 public final class MavenPluginExtension
     implements BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
+  private static final String DEFAULT_PLUGIN_CONTEXT_CLASS_NAME =
+      "com.github.codeteapot.maven.plugin.testing.plexus.PlexusMavenPluginContext";
+
   // private static final Namespace MAVEN_PLUGIN = create(
   // "com.github.codeteapot.maven.test");
 
-  private MavenPluginContext pluginContext;
+  String pluginContextClassName;
+  MavenPluginContext pluginContext;
 
   /**
    * Default constructor.
    */
   public MavenPluginExtension() {
+    pluginContextClassName = DEFAULT_PLUGIN_CONTEXT_CLASS_NAME;
     pluginContext = null;
   }
 
@@ -33,9 +38,7 @@ public final class MavenPluginExtension
    */
   @Override
   public void beforeEach(ExtensionContext context) throws Exception {
-    pluginContext = (MavenPluginContext) Class.forName(
-        "com.github.codeteapot.maven.plugin.testing.plexus.PlexusMavenPluginContext")
-        .newInstance();
+    pluginContext = (MavenPluginContext) Class.forName(pluginContextClassName).newInstance();
   }
 
   /**

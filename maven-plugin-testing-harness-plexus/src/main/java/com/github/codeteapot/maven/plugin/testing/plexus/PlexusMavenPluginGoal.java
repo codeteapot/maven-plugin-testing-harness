@@ -73,6 +73,7 @@ class PlexusMavenPluginGoal implements MavenPluginGoalConfigurator {
   private static final String REALM_ID = "plexus.core";
   private static final String CONTAINER_NAME = "maven";
 
+  private final String descriptorPath;
   private final Set<PlexusInjectionCommand> injectionCommandSet;
   private final String name;
   private final File baseDir;
@@ -80,10 +81,12 @@ class PlexusMavenPluginGoal implements MavenPluginGoalConfigurator {
   private final List<PlexusConfiguration> configurations;
 
   PlexusMavenPluginGoal(
+      String descriptorPath,
       Set<PlexusInjectionCommand> injectionCommandSet,
       String name,
       File baseDir,
       MavenPluginLogger logger) {
+    this.descriptorPath = descriptorPath;
     this.injectionCommandSet = new HashSet<>(injectionCommandSet);
     this.name = name;
     this.baseDir = baseDir;
@@ -108,7 +111,7 @@ class PlexusMavenPluginGoal implements MavenPluginGoalConfigurator {
       executeMojo(
           container,
           project,
-          newMojoExecution(container, name),
+          newMojoExecution(container, descriptorPath, name),
           newMavenSession(container, project, baseDir),
           configurations,
           log);
@@ -149,11 +152,14 @@ class PlexusMavenPluginGoal implements MavenPluginGoalConfigurator {
     return session;
   }
 
-  private static MojoExecution newMojoExecution(PlexusContainer container, String goal)
+  private static MojoExecution newMojoExecution(
+      PlexusContainer container,
+      String descriptorPath,
+      String goal)
       throws IOException, PlexusConfigurationException, CycleDetectedInComponentGraphException {
     try (Reader reader = new InterpolationFilterReader(
         new InputStreamReader(PlexusMavenPluginGoal.class
-            .getResourceAsStream("/META-INF/maven/plugin.xml")),
+            .getResourceAsStream(descriptorPath)),
         container.getContext().getContextData(), "${", "}")) {
       PluginDescriptor pluginDescriptor = new PluginDescriptorBuilder().build(reader);
       for (ComponentDescriptor<?> componentDescriptor : pluginDescriptor.getComponents()) {
@@ -178,7 +184,8 @@ class PlexusMavenPluginGoal implements MavenPluginGoalConfigurator {
   }
 
   private static Xpp3Dom newConfiguration(Plugin plugin) {
-    return plugin != null ? (Xpp3Dom) plugin.getConfiguration() : new Xpp3Dom("configuration");
+    // return plugin != null ? (Xpp3Dom) plugin.getConfiguration() : new Xpp3Dom("configuration");
+    return new Xpp3Dom("configuration");
   }
 
   private static Xpp3Dom newXpp3Dom(String name, String value) {

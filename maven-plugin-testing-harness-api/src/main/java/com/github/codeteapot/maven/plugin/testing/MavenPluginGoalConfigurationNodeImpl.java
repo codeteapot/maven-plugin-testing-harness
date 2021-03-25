@@ -11,8 +11,14 @@ class MavenPluginGoalConfigurationNodeImpl implements MavenPluginGoalConfigurati
   private final List<MavenPluginGoalConfigurationElement> elements;
 
   MavenPluginGoalConfigurationNodeImpl(String name) {
+    this(name, new ArrayList<>());
+  }
+
+  MavenPluginGoalConfigurationNodeImpl(
+      String name,
+      List<MavenPluginGoalConfigurationElement> elements) {
     this.name = requireNonNull(name);
-    elements = new ArrayList<>();
+    this.elements = requireNonNull(elements);
   }
 
   @Override

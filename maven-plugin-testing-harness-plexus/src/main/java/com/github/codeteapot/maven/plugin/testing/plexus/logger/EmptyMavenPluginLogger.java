@@ -8,6 +8,14 @@ import com.github.codeteapot.maven.plugin.testing.logger.MavenPluginLoggerMessag
  */
 public class EmptyMavenPluginLogger implements MavenPluginLogger {
 
+  /**
+   * Default constructor.
+   */
+  public EmptyMavenPluginLogger() {}
+
+  /**
+   * It does nothing.
+   */
   @Override
   public void log(MavenPluginLoggerMessage message) {
     // It does nothing...

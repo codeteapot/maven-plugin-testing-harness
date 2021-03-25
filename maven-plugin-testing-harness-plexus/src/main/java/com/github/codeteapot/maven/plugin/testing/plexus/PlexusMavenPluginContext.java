@@ -12,9 +12,13 @@ import java.util.Set;
  */
 public class PlexusMavenPluginContext implements MavenPluginContext {
 
+  private static final String DESCRIPTOR_PATH = "/META-INF/maven/plugin.xml";
+  
   private final Set<PlexusInjectionCommand> injectionCommandSet;
   private File baseDir;
   private MavenPluginLogger logger;
+  
+  String descriptorPath;
 
   /**
    * Default constructor.
@@ -23,6 +27,7 @@ public class PlexusMavenPluginContext implements MavenPluginContext {
     injectionCommandSet = new HashSet<>();
     baseDir = null;
     logger = null;
+    descriptorPath = DESCRIPTOR_PATH;
   }
 
   @Override
@@ -42,6 +47,6 @@ public class PlexusMavenPluginContext implements MavenPluginContext {
 
   @Override
   public MavenPluginGoalConfigurator goal(String name) {
-    return new PlexusMavenPluginGoal(injectionCommandSet, name, baseDir, logger);
+    return new PlexusMavenPluginGoal(descriptorPath, injectionCommandSet, name, baseDir, logger);
   }
 }

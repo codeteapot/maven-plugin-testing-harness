@@ -1,6 +1,7 @@
 package com.github.codeteapot.maven.plugin.testing.logger;
 
 import static java.util.Collections.unmodifiableList;
+import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,11 @@ public class AccumulatedMavenPluginLogger implements MavenPluginLogger {
    * Empty accumulation logger.
    */
   public AccumulatedMavenPluginLogger() {
-    accumulated = new ArrayList<>();
+    this(new ArrayList<>());
+  }
+  
+  AccumulatedMavenPluginLogger(List<MavenPluginLoggerMessage> accumulated) {
+    this.accumulated = requireNonNull(accumulated);
   }
 
   /**
