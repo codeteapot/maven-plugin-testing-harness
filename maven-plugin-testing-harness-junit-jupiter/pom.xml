@@ -254,10 +254,6 @@
         </plugins>
     </reporting>
     
-    <properties>
-        <checkstyle.configLocation>https://raw.githubusercontent.com/checkstyle/checkstyle/master/src/main/resources/google_checks.xml</checkstyle.configLocation>
-    </properties>
-    
     <profiles>
         <profile>
         

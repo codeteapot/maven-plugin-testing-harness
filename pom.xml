@@ -134,6 +134,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <release.remoteName>origin</release.remoteName>
         <release.tag>v${project.version}</release.tag>
+        <checkstyle.configLocation>https://raw.githubusercontent.com/checkstyle/checkstyle/cd9cf0081ef295b9902c8c7074d3fb46a1e4d408/src/main/resources/google_checks.xml</checkstyle.configLocation>
     </properties>
     
     <profiles>
