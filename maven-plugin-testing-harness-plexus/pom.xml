@@ -9,7 +9,7 @@
     <parent>
         <groupId>com.github.codeteapot.maven.plugin-testing</groupId>
         <artifactId>maven-plugin-testing-harness</artifactId>
-        <version>0.1.1</version>
+        <version>1.0.0</version>
     </parent>
     
     <artifactId>maven-plugin-testing-harness-plexus</artifactId>
@@ -24,7 +24,7 @@
         <dependency>
             <groupId>com.github.codeteapot.maven.plugin-testing</groupId>
             <artifactId>maven-plugin-testing-harness-api</artifactId>
-            <version>0.1.1</version>
+            <version>1.0.0</version>
         </dependency>
         
         <dependency>
