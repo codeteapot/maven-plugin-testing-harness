@@ -13,27 +13,23 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class MavenPluginExtensionTest {
 
-  private static final String PLEXUS_PLUGIN_CONTEXT_CLASS_NAME =
-      "com.github.codeteapot.maven.plugin.testing.plexus.PlexusMavenPluginContext";
-  private static final String TEST_PLUGIN_CONTEXT_CLASS_NAME =
-      "com.github.codeteapot.maven.plugin.testing.junit.jupiter.TestMavenPluginContext";
-  
+  private static final String TEST_PLUGIN_CONTEXT_NAME = "test";
   private static final MavenPluginContext TEST_MAVEN_PLUGIN_CONTEXT = new TestMavenPluginContext();
 
   @Mock
   private ExtensionContext extensionContext;
 
   @Test
-  public void plexusAsDefaultPluginContext() {
+  public void withoutDefaultPluginContext() {
     MavenPluginExtension extension = new MavenPluginExtension();
 
-    assertThat(extension.pluginContextClassName).isEqualTo(PLEXUS_PLUGIN_CONTEXT_CLASS_NAME);
+    assertThat(extension.pluginContextName).isNull();
   }
 
   @Test
   public void createContextBeforeEachTest() throws Exception {
     MavenPluginExtension extension = new MavenPluginExtension();
-    extension.pluginContextClassName = TEST_PLUGIN_CONTEXT_CLASS_NAME;
+    extension.pluginContextName = TEST_PLUGIN_CONTEXT_NAME;
     extension.pluginContext = null;
 
     extension.beforeEach(extensionContext);
@@ -64,14 +60,14 @@ public class MavenPluginExtensionTest {
 
     assertThat(supports).isTrue();
   }
-  
+
   @Test
   public void resolveMavenPluginContextParameter(@Mock ParameterContext parameterContext) {
     MavenPluginExtension extension = new MavenPluginExtension();
     extension.pluginContext = TEST_MAVEN_PLUGIN_CONTEXT;
-    
+
     Object resolvedParameter = extension.resolveParameter(parameterContext, extensionContext);
-    
+
     assertThat(resolvedParameter).isEqualTo(TEST_MAVEN_PLUGIN_CONTEXT);
   }
 

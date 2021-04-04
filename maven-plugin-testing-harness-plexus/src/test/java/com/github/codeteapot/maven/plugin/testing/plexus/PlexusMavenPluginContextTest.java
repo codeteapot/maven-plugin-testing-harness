@@ -9,11 +9,14 @@ import static com.github.codeteapot.maven.plugin.testing.logger.MavenPluginLogge
 import static com.github.codeteapot.maven.plugin.testing.logger.MavenPluginLoggerMessageLevel.LOG_WARN;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static java.util.ServiceLoader.load;
+import static java.util.stream.StreamSupport.stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
+import com.github.codeteapot.maven.plugin.testing.MavenPluginContext;
 import com.github.codeteapot.maven.plugin.testing.logger.MavenPluginLogger;
 import java.io.BufferedReader;
 import java.io.File;
@@ -33,6 +36,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class PlexusMavenPluginContextTest {
 
+  private static final String PLEXUS_PLUGIN_CONTEXT_NAME = "plexus";
+  
   private static final String OPERATION_FACTORY_ROLE =
       "com.github.codeteapot.maven.plugin.testing.plexus.OperationFactory";
 
@@ -50,6 +55,7 @@ public class PlexusMavenPluginContextTest {
 
   private static final String SOME_OPERAND_VALUE = "1";
 
+
   private PlexusMavenPluginContext context;
 
   @Mock
@@ -62,7 +68,11 @@ public class PlexusMavenPluginContextTest {
 
   @BeforeEach
   public void setUp(@TempDir File baseDir) {
-    context = new PlexusMavenPluginContext();
+    context = stream(load(MavenPluginContext.class).spliterator(), false)
+        .filter(ctx -> ctx.getName().equals(PLEXUS_PLUGIN_CONTEXT_NAME))
+        .findAny()
+        .map(PlexusMavenPluginContext.class::cast)
+        .get();
     context.setBaseDir(baseDir);
     context.inject(operationFactory, OPERATION_FACTORY_ROLE);
 
@@ -191,7 +201,7 @@ public class PlexusMavenPluginContextTest {
 
     assertThat(e).isNotNull();
   }
-  
+
   @Test
   public void executeWithErrorWhenLookingForGoal() throws Exception {
     context.descriptorPath = TEST_DESCRIPTOR_PATH;
