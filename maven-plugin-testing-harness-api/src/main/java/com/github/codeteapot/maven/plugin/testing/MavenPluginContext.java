@@ -9,12 +9,19 @@ import java.io.File;
 public interface MavenPluginContext {
 
   /**
+   * Name used to determine what context implementation must be used.
+   *
+   * @return Implementation name.
+   */
+  String getName();
+
+  /**
    * Set the base directory used where plug-in is executed.
    *
    * @param baseDir The new base directory. May be {@code null} for default one.
    */
   void setBaseDir(File baseDir);
-  
+
   /**
    * Set the logger used by the plug-in execution.
    *
@@ -26,7 +33,7 @@ public interface MavenPluginContext {
    * Injects a Plexus component with the given role.
    *
    * @param component Component to be injected.
-   * @param role Role for component lookup. 
+   * @param role Role for component lookup.
    */
   void inject(Object component, String role);
 
@@ -38,7 +45,7 @@ public interface MavenPluginContext {
    * @return A configurator for the wanted plug-in goal.
    */
   MavenPluginGoalConfigurator goal(String name);
-  
+
   /**
    * Instantiates a goal configuration.
    *

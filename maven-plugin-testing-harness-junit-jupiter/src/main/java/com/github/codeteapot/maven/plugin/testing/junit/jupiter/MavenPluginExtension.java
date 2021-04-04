@@ -1,5 +1,8 @@
 package com.github.codeteapot.maven.plugin.testing.junit.jupiter;
 
+import static java.util.ServiceLoader.load;
+import static java.util.stream.StreamSupport.stream;
+
 import com.github.codeteapot.maven.plugin.testing.MavenPluginContext;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -16,20 +19,17 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 public final class MavenPluginExtension
     implements BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
-  private static final String DEFAULT_PLUGIN_CONTEXT_CLASS_NAME =
-      "com.github.codeteapot.maven.plugin.testing.plexus.PlexusMavenPluginContext";
-
   // private static final Namespace MAVEN_PLUGIN = create(
   // "com.github.codeteapot.maven.test");
 
-  String pluginContextClassName;
+  String pluginContextName;
   MavenPluginContext pluginContext;
 
   /**
    * Default constructor.
    */
   public MavenPluginExtension() {
-    pluginContextClassName = DEFAULT_PLUGIN_CONTEXT_CLASS_NAME;
+    pluginContextName = null;
     pluginContext = null;
   }
 
@@ -38,7 +38,10 @@ public final class MavenPluginExtension
    */
   @Override
   public void beforeEach(ExtensionContext context) throws Exception {
-    pluginContext = (MavenPluginContext) Class.forName(pluginContextClassName).newInstance();
+    pluginContext = stream(load(MavenPluginContext.class).spliterator(), false)
+        .filter(this::pluginContextMatch)
+        .findAny()
+        .orElseThrow(() -> new IllegalStateException("Maven plugin context is not available"));
   }
 
   /**
@@ -67,5 +70,9 @@ public final class MavenPluginExtension
   public Object resolveParameter(ParameterContext parameterContext,
       ExtensionContext extensionContext) throws ParameterResolutionException {
     return pluginContext;
+  }
+
+  private boolean pluginContextMatch(MavenPluginContext context) {
+    return pluginContextName == null || context.getName().equals(pluginContextName);
   }
 }

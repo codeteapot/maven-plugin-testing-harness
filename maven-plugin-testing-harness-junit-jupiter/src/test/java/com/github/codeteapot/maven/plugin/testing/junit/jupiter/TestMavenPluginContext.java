@@ -5,9 +5,16 @@ import com.github.codeteapot.maven.plugin.testing.MavenPluginGoalConfigurator;
 import com.github.codeteapot.maven.plugin.testing.logger.MavenPluginLogger;
 import java.io.File;
 
-class TestMavenPluginContext implements MavenPluginContext {
+public class TestMavenPluginContext implements MavenPluginContext {
 
-  TestMavenPluginContext() {}
+  private static final String NAME = "test";
+
+  public TestMavenPluginContext() {}
+
+  @Override
+  public String getName() {
+    return NAME;
+  }
 
   @Override
   public void setBaseDir(File baseDir) {

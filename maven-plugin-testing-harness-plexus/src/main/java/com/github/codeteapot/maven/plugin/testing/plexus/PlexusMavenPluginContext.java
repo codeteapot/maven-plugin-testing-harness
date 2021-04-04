@@ -12,6 +12,7 @@ import java.util.Set;
  */
 public class PlexusMavenPluginContext implements MavenPluginContext {
 
+  private static final String NAME = "plexus";
   private static final String DESCRIPTOR_PATH = "/META-INF/maven/plugin.xml";
   
   private final Set<PlexusInjectionCommand> injectionCommandSet;
@@ -28,6 +29,11 @@ public class PlexusMavenPluginContext implements MavenPluginContext {
     baseDir = null;
     logger = null;
     descriptorPath = DESCRIPTOR_PATH;
+  }
+  
+  @Override
+  public String getName() {
+    return NAME;
   }
 
   @Override
