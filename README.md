@@ -5,5 +5,5 @@
 
 Mechanisms to manage tests on Mojo.
 
-Visit [project site](https://codeteapot.github.io/maven-plugin-testing-harness/v1.0.0) to see full
+Visit [project site](https://codeteapot.github.io/maven-plugin-testing-harness/v1.1.0) to see full
 documentation.
