@@ -22,14 +22,18 @@ public final class MavenPluginExtension
   // private static final Namespace MAVEN_PLUGIN = create(
   // "com.github.codeteapot.maven.test");
 
-  String pluginContextName;
+  /**
+   * Property name of the name of used plug-in context.
+   */
+  public static final String CONTEXT_NAME_PROPERTY_NAME =
+      "com.github.codeteapot.maven.plugin.testing.junit.jupiter.CONTEXT_NAME";
+  
   MavenPluginContext pluginContext;
 
   /**
    * Default constructor.
    */
   public MavenPluginExtension() {
-    pluginContextName = null;
     pluginContext = null;
   }
 
@@ -39,7 +43,9 @@ public final class MavenPluginExtension
   @Override
   public void beforeEach(ExtensionContext context) throws Exception {
     pluginContext = stream(load(MavenPluginContext.class).spliterator(), false)
-        .filter(this::pluginContextMatch)
+        .filter(ctx -> context.getConfigurationParameter(CONTEXT_NAME_PROPERTY_NAME)
+            .map(ctxName -> ctx.getName().equals(ctxName))
+            .orElse(true))
         .findAny()
         .orElseThrow(() -> new IllegalStateException("Maven plugin context is not available"));
   }
@@ -70,9 +76,5 @@ public final class MavenPluginExtension
   public Object resolveParameter(ParameterContext parameterContext,
       ExtensionContext extensionContext) throws ParameterResolutionException {
     return pluginContext;
-  }
-
-  private boolean pluginContextMatch(MavenPluginContext context) {
-    return pluginContextName == null || context.getName().equals(pluginContextName);
   }
 }

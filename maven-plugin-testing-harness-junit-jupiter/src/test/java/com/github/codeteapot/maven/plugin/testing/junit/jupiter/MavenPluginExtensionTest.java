@@ -1,9 +1,11 @@
 package com.github.codeteapot.maven.plugin.testing.junit.jupiter;
 
+import static com.github.codeteapot.maven.plugin.testing.junit.jupiter.MavenPluginExtension.CONTEXT_NAME_PROPERTY_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.when;
 import com.github.codeteapot.maven.plugin.testing.MavenPluginContext;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -14,36 +16,31 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class MavenPluginExtensionTest {
 
-  private static final String TEST_PLUGIN_CONTEXT_NAME = "test";
+  private static final String TEST_MAVEN_PLUGIN_CONTEXT_NAME = "test";
   private static final MavenPluginContext TEST_MAVEN_PLUGIN_CONTEXT = new TestMavenPluginContext();
 
-  private static final String UNAVAILABLE_PLUGIN_CONTEXT_NAME = "%%%unavailable%%%";
+  private static final String UNAVAILABLE_MAVEN_PLUGIN_CONTEXT_NAME = "%%%unavailable%%%";
 
   @Mock
   private ExtensionContext extensionContext;
 
   @Test
-  public void withoutDefaultPluginContext() {
-    MavenPluginExtension extension = new MavenPluginExtension();
-
-    assertThat(extension.pluginContextName).isNull();
-  }
-
-  @Test
   public void createTestContextBeforeEachTest() throws Exception {
+    when(extensionContext.getConfigurationParameter(CONTEXT_NAME_PROPERTY_NAME))
+        .thenReturn(Optional.of(TEST_MAVEN_PLUGIN_CONTEXT_NAME));
     MavenPluginExtension extension = new MavenPluginExtension();
-    extension.pluginContextName = TEST_PLUGIN_CONTEXT_NAME;
     extension.pluginContext = null;
 
     extension.beforeEach(extensionContext);
 
     assertThat(extension.pluginContext).isInstanceOf(TestMavenPluginContext.class);
   }
-  
+
   @Test
   public void createAnyContextBeforeEachTest() throws Exception {
+    when(extensionContext.getConfigurationParameter(CONTEXT_NAME_PROPERTY_NAME))
+        .thenReturn(Optional.empty());
     MavenPluginExtension extension = new MavenPluginExtension();
-    extension.pluginContextName = null;
     extension.pluginContext = null;
 
     extension.beforeEach(extensionContext);
@@ -84,11 +81,12 @@ public class MavenPluginExtensionTest {
 
     assertThat(resolvedParameter).isEqualTo(TEST_MAVEN_PLUGIN_CONTEXT);
   }
-  
+
   @Test
   public void failWhenPluginContextIsNotAvailable() {
+    when(extensionContext.getConfigurationParameter(CONTEXT_NAME_PROPERTY_NAME))
+        .thenReturn(Optional.of(UNAVAILABLE_MAVEN_PLUGIN_CONTEXT_NAME));
     MavenPluginExtension extension = new MavenPluginExtension();
-    extension.pluginContextName = UNAVAILABLE_PLUGIN_CONTEXT_NAME;
 
     Throwable e = catchThrowable(() -> extension.beforeEach(extensionContext));
 
