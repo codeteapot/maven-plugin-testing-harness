@@ -8,7 +8,7 @@
     
     <groupId>com.github.codeteapot.maven.plugin-testing</groupId>
     <artifactId>maven-plugin-testing-harness</artifactId>
-    <version>1.1.2</version>
+    <version>1.1.3</version>
     <packaging>pom</packaging>
     
     <name>Maven Plugin Testing Harness</name>
@@ -44,9 +44,9 @@
     </scm>
     
     <modules>
-        <!--module>maven-plugin-testing-harness-api</module-->
-        <!--module>maven-plugin-testing-harness-junit-jupiter</module-->
-        <!--module>maven-plugin-testing-harness-plexus</module-->
+        <module>maven-plugin-testing-harness-api</module>
+        <module>maven-plugin-testing-harness-junit-jupiter</module>
+        <module>maven-plugin-testing-harness-plexus</module>
     </modules>
     
     <build>
